@@ -45,6 +45,9 @@
                 <param name="onload" value="true" />
             </feature>
         </config-file>
+
+        <resource-file src="res/android/values/values.xml" target="res/values/cordova-plugin-statusbar.xml" />
+        <resource-file src="res/android/values-w600dp/values.xml" target="res/values-w600dp/cordova-plugin-statusbar.xml" />
     </platform>
 
     <!-- ios -->
