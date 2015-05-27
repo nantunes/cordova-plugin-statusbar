@@ -41,6 +41,11 @@ var namedColors = {
 var StatusBar = {
 
     isVisible: true,
+    statusBarHeight: 0,
+
+    hasNavigationBar: false,
+    navigationBarHeight: 0,
+    navigationBarWidth: 0,
 
     overlaysWebView: function (doOverlay) {
         exec(null, null, "StatusBar", "overlaysWebView", [doOverlay]);
@@ -83,6 +88,66 @@ var StatusBar = {
         exec(null, null, "StatusBar", "backgroundColorByHexString", [hexString]);
     },
 
+    setStatusBarBackgroundColor: function (hexString) {
+        if(namedColors[hexString]) {
+            hexString = namedColors[colorname];
+        }
+
+        if (hexString.charAt(0) !== "#") {
+            hexString = "#" + hexString;
+        }
+
+        if (hexString.length < 6) {
+            var split = hexString.split("");
+            hexString = "#";
+            for (var i = 0, il = split.length; i != il; ++i) {
+                hexString += split[i] + split[i];
+            }
+        }
+
+        exec(null, null, "StatusBar", "setStatusBarBackgroundColor", [hexString]);
+    },
+
+    setNavigationBarBackgroundColor: function (hexString) {
+        if(namedColors[hexString]) {
+            hexString = namedColors[colorname];
+        }
+
+        if (hexString.charAt(0) !== "#") {
+            hexString = "#" + hexString;
+        }
+
+        if (hexString.length < 6) {
+            var split = hexString.split("");
+            hexString = "#";
+            for (var i = 0, il = split.length; i != il; ++i) {
+                hexString += split[i] + split[i];
+            }
+        }
+
+        exec(null, null, "StatusBar", "setNavigationBarBackgroundColor", [hexString]);
+    },
+
+    setSystemBarsBackgroundColor: function (hexString) {
+        if(namedColors[hexString]) {
+            hexString = namedColors[colorname];
+        }
+
+        if (hexString.charAt(0) !== "#") {
+            hexString = "#" + hexString;
+        }
+
+        if (hexString.length < 6) {
+            var split = hexString.split("");
+            hexString = "#";
+            for (var i = 0, il = split.length; i != il; ++i) {
+                hexString += split[i] + split[i];
+            }
+        }
+
+        exec(null, null, "StatusBar", "setNavigationBarBackgroundColor", [hexString]);
+    },
+
     hide: function () {
         exec(null, null, "StatusBar", "hide", []);
         StatusBar.isVisible = false;
@@ -91,6 +156,38 @@ var StatusBar = {
     show: function () {
         exec(null, null, "StatusBar", "show", []);
         StatusBar.isVisible = true;
+    },
+
+    hideStatusBar: function () {
+        exec(null, null, "StatusBar", "hideStatusBar", []);
+        StatusBar.isVisible = false;
+    },
+
+    showStatusBar: function () {
+        exec(null, null, "StatusBar", "showStatusBar", []);
+        StatusBar.isVisible = true;
+    },
+
+    hideNavigationBar: function () {
+        exec(null, null, "StatusBar", "hideNavigationBar", []);
+        StatusBar.isNavigationBarVisible = false;
+    },
+
+    showNavigationBar: function () {
+        exec(null, null, "StatusBar", "showNavigationBar", []);
+        StatusBar.isNavigationBarVisible = true;
+    },
+
+    hideSystemBars: function () {
+        exec(null, null, "StatusBar", "hideSystemBars", []);
+        StatusBar.isVisible = false;
+        StatusBar.isNavigationBarVisible = false;
+    },
+
+    showSystemBars: function () {
+        exec(null, null, "StatusBar", "showSystemBars", []);
+        StatusBar.isVisible = true;
+        StatusBar.isNavigationBarVisible = true;
     }
 
 };
@@ -100,6 +197,17 @@ exec(function (res) {
     if (typeof res == 'object') {
         if (res.type == 'tap') {
             cordova.fireWindowEvent('statusTap');
+        } else {
+            var density = window.devicePixelRatio;
+
+            StatusBar.isVisible = res.statusBarVisible;
+            StatusBar.statusBarHeight = res.statusBarHeight / density;
+
+            if(StatusBar.hasNavigationBar = res.hasNavigationBar) {
+                StatusBar.isNavigationBarVisible = res.navigationBarVisible;
+                StatusBar.navigationBarHeight = res.navigationBarHeight / density;
+                StatusBar.navigationBarWidth = res.navigationBarWidth / density;
+            }
         }
     } else {
         StatusBar.isVisible = res;
